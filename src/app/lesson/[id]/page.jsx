@@ -1,14 +1,18 @@
-export default function LessonDetailsPage() {
-  return (
-    <div className="max-w-4xl mx-auto py-20 space-y-8">
-      <img
-        src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3"
-        className="w-full h-[500px] object-cover rounded-3xl"
-      />
+import LessonDetails from "@/components/lesson/LessonDetails";
 
-      <h1 className="text-5xl font-bold">Failure teaches success</h1>
+export default async function LessonPage() {
+  const lesson = {
+    title: "Never Compare Yourself",
 
-      <p className="text-lg text-gray-600">Full lesson description here...</p>
-    </div>
-  );
+    description:
+      "Your timeline is different from everyone else. Focus on your own growth and build your future step by step.",
+
+    category: "Mindset",
+
+    emotionalTone: "Motivational",
+
+    image: "https://images.unsplash.com/photo-1517841905240-472988babdf9",
+  };
+
+  return <LessonDetails lesson={lesson} />;
 }

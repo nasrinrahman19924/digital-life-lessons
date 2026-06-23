@@ -1,20 +1,43 @@
-const ProfilePage = () => {
+export default function ProfilePage() {
+  const user = {
+    name: "Shahin",
+
+    email: "shahin@gmail.com",
+
+    image: "https://i.pravatar.cc/300",
+
+    isPremium: true,
+  };
+
   return (
-    <div>
+    <div className="space-y-10">
       <div className="border rounded-3xl p-10">
-        <img
-          className="w-32 h-32 rounded-full"
-          src="https://i.pravatar.cc/200"
-        />
+        <div className="flex flex-col md:flex-row gap-10 items-center">
+          <img src={user.image} className="h-40 w-40 rounded-full" />
 
-        <h2 className="text-4xl font-bold mt-5">John Doe</h2>
+          <div>
+            <h1 className="text-5xl font-bold">{user.name}</h1>
 
-        <p>john@gmail.com</p>
+            <p className="mt-3">{user.email}</p>
 
-        <p>⭐ Premium User</p>
+            <div className="flex gap-3 mt-6">
+              <span className="bg-violet-100 px-4 py-2 rounded-full">
+                15 Lessons
+              </span>
+
+              <span className="bg-green-100 px-4 py-2 rounded-full">
+                8 Favorites
+              </span>
+
+              {user.isPremium && (
+                <span className="bg-yellow-100 px-4 py-2 rounded-full">
+                  Premium ⭐
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
-};
-
-export default ProfilePage;
+}

@@ -1,29 +1,34 @@
-import LessonCard from "@/components/lesson/LessonCard";
+async function getLessons() {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/lessons`,
+    {
+      cache: "no-store",
+    },
+  );
 
-const lessons = [
-  {
-    _id: 1,
+  return res.json();
+}
 
-    title: "Failure teaches success",
+export default async function PublicLessonsPage() {
+  const lessons = await getLessons();
 
-    description: "Every failure teaches something important.",
-
-    category: "Mindset",
-
-    accessLevel: "Free",
-
-    image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3",
-  },
-];
-
-export default function PublicLessonsPage() {
   return (
-    <div className="max-w-7xl mx-auto py-20">
-      <h1 className="text-5xl font-bold mb-10">Public Lessons</h1>
+    <div className="max-w-7xl mx-auto p-10">
+      <h1 className="text-4xl font-bold mb-10">Public Lessons</h1>
 
-      <div className="grid md:grid-cols-3 gap-8">
+      <div className="grid md:grid-cols-3 gap-6">
         {lessons.map((lesson) => (
-          <LessonCard key={lesson._id} lesson={lesson} />
+          <div key={lesson._id} className="border rounded-3xl p-6">
+            <h2 className="text-2xl font-bold">{lesson.title}</h2>
+
+            <p className="mt-4">{lesson.description}</p>
+
+            <div className="mt-5 flex gap-3">
+              <span>❤️ {lesson.likes}</span>
+
+              <span>⭐ {lesson.favorites}</span>
+            </div>
+          </div>
         ))}
       </div>
     </div>

@@ -1,41 +1,59 @@
-const MyLessonsPage = () => {
+"use client";
+
+import { useEffect, useState } from "react";
+
+export default function MyLessonsPage() {
+  const [lessons, setLessons] = useState([]);
+
+  useEffect(() => {
+    fetchLessons();
+  }, []);
+
+  const fetchLessons = async () => {
+    try {
+      const response = await fetch("/api/lessons");
+
+      const data = await response.json();
+
+      setLessons(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div>
       <h1 className="text-4xl font-bold mb-10">My Lessons</h1>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto border rounded-3xl">
         <table className="w-full">
           <thead>
-            <tr>
+            <tr className="h-16 border-b">
               <th>Title</th>
 
-              <th>Status</th>
+              <th>Category</th>
 
-              <th>Access</th>
+              <th>Likes</th>
 
-              <th>Actions</th>
+              <th>Favorites</th>
             </tr>
           </thead>
 
           <tbody>
-            <tr>
-              <td>My Lesson</td>
+            {lessons.map((lesson) => (
+              <tr key={lesson._id} className="h-20 border-b">
+                <td>{lesson.title}</td>
 
-              <td>Public</td>
+                <td>{lesson.category}</td>
 
-              <td>Premium</td>
+                <td>{lesson.likes}</td>
 
-              <td>
-                <button>Edit</button>
-
-                <button>Delete</button>
-              </td>
-            </tr>
+                <td>{lesson.favorites}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
     </div>
   );
-};
-
-export default MyLessonsPage;
+}

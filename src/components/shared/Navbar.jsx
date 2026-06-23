@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 
+
 import {
   Avatar,
   Button,
@@ -79,13 +80,12 @@ const Navbar = () => {
               </Link>
             </div>
           ) : (
-            <Dropdown>
+            <Dropdown className="flex">
               <DropdownTrigger>
                 <Avatar
-                  isBordered
                   src={user.image}
                   name={user.name}
-                  className="cursor-pointer"
+                  className="cursor-pointer border-2 border-violet-500"
                 />
               </DropdownTrigger>
 

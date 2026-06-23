@@ -1,35 +1,127 @@
 "use client";
 
-export default function AddLessonPage() {
-  return (
-    <div className="max-w-4xl">
-      <h1 className="text-4xl font-bold mb-10">Add New Lesson</h1>
+import { useState } from "react";
 
-      <form className="space-y-6">
+import { useRouter } from "next/navigation";
+
+export default function AddLessonPage() {
+  const router = useRouter();
+
+  const [loading, setLoading] = useState(false);
+
+  const [form, setForm] = useState({
+    title: "",
+
+    category: "",
+
+    description: "",
+
+    emotionalTone: "",
+
+    tags: "",
+  });
+
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setLoading(true);
+
+    try {
+      const lesson = {
+        ...form,
+
+        tags: [],
+
+        isPublic: true,
+
+        authorName: "Demo User",
+
+        authorEmail: "demo@gmail.com",
+
+        authorImage: "",
+
+        likes: 0,
+
+        favorites: 0,
+
+        createdAt: new Date(),
+      };
+
+      const response = await fetch("/api/lessons", {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify(lesson),
+      });
+
+      if (response.ok) {
+        router.push("/dashboard/my-lessons");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  return (
+    <div className="max-w-3xl mx-auto">
+      <h1 className="text-4xl font-bold mb-10">Add Lesson</h1>
+
+      <form onSubmit={handleSubmit} className="space-y-5">
         <input
-          type="text"
-          placeholder="Lesson Title"
+          required
+          name="title"
+          placeholder="Title"
+          onChange={handleChange}
+          className="w-full border p-4 rounded-xl"
+        />
+
+        <input
+          required
+          name="category"
+          placeholder="Category"
+          onChange={handleChange}
+          className="w-full border p-4 rounded-xl"
+        />
+
+        <input
+          required
+          name="emotionalTone"
+          placeholder="Emotional Tone"
+          onChange={handleChange}
           className="w-full border p-4 rounded-xl"
         />
 
         <textarea
+          required
+          name="description"
           placeholder="Description"
-          rows={6}
+          onChange={handleChange}
+          className="w-full border p-4 rounded-xl h-40"
+        />
+        <input
+          name="tags"
+          placeholder="success, life, growth"
+          onChange={handleChange}
           className="w-full border p-4 rounded-xl"
         />
 
-        <select className="w-full border p-4 rounded-xl">
-          <option>Personal Growth</option>
-
-          <option>Career</option>
-
-          <option>Relationships</option>
-
-          <option>Mindset</option>
-        </select>
-
-        <button className="bg-violet-600 text-white px-6 py-3 rounded-xl">
-          Create Lesson
+        <button
+          disabled={loading}
+          className="bg-violet-600 text-white px-6 py-3 rounded-xl"
+        >
+          {loading ? "Saving..." : "Save Lesson"}
         </button>
       </form>
     </div>

@@ -2,9 +2,13 @@
 
 import Link from "next/link";
 
+import { usePathname } from "next/navigation";
+
 import { Home, Plus, BookOpen, Heart, User, CreditCard } from "lucide-react";
 
 export default function DashboardSidebar() {
+  const pathname = usePathname();
+
   const menus = [
     {
       name: "Dashboard",
@@ -56,20 +60,34 @@ export default function DashboardSidebar() {
   ];
 
   return (
-    <aside className="w-72 min-h-screen border-r bg-white p-6">
-      <div className="mb-12">
-        <h2 className="font-bold text-2xl">🧠 Dashboard</h2>
-      </div>
+    <aside className="w-72 min-h-screen bg-slate-900 text-white p-6">
+      <h2 className="text-3xl font-bold mb-10">🧠 Dashboard</h2>
 
-      <div className="space-y-3 mt-6">
+      <div className="space-y-3">
         {menus.map((item) => {
           const Icon = item.icon;
+
+          const active = pathname === item.href;
 
           return (
             <Link
               key={item.href}
               href={item.href}
-              className="flex items-center mt-10 gap-3 p-4 rounded-xl hover:bg-violet-100 transition"
+              className={`
+
+flex items-center
+
+gap-3
+
+p-4
+
+rounded-xl
+
+transition
+
+${active ? "bg-violet-600" : "hover:bg-slate-800"}
+
+`}
             >
               <Icon size={20} />
 
