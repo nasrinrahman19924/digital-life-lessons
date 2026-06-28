@@ -14,7 +14,7 @@ import {
 
 import { At, ShieldKeyhole, Eye, EyeSlash } from "@gravity-ui/icons";
 
-import { signIn } from "@/lib/auth-client";
+import { authClient, signIn } from "@/lib/auth-client";
 
 import { toast } from "sonner";
 import { FcGoogle } from "react-icons/fc";
@@ -57,6 +57,12 @@ export default function SigninPage() {
       setIsLoading(false);
     }
   };
+const handleGoogleSignin = async () => {
+  await authClient.signIn.social({
+    provider: "google",
+      callbackURL: "/",
+  });
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-zinc-950 px-4">
@@ -134,14 +140,7 @@ export default function SigninPage() {
             type="button"
             variant="bordered"
             className="w-full bg-purple-800 text-white items-center font-bold"
-            onPress={async () => {
-              await signIn.social({
-                provider: "google",
-
-                callbackURL: "/",
-              });
-            }}
-          >
+            onClick={handleGoogleSignin}>
           Continue With Google</Button>
 
           <div className="text-center">

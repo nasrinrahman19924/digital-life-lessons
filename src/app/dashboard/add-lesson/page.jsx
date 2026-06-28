@@ -19,6 +19,12 @@ export default function AddLessonPage() {
     emotionalTone: "",
 
     tags: "",
+
+    image: "",
+
+    visibility: "public",
+
+    accessLevel: "free",
   });
 
   const handleChange = (e) => {
@@ -31,6 +37,11 @@ export default function AddLessonPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (lessonType === "premium" && !user?.isPremium) {
+      alert("Upgrade to Premium first.");
+      return;
+    }
 
     setLoading(true);
 
@@ -102,6 +113,30 @@ export default function AddLessonPage() {
           onChange={handleChange}
           className="w-full border p-4 rounded-xl"
         />
+        <input
+          name="image"
+          placeholder="Image URL"
+          onChange={handleChange}
+          className="w-full border p-4 rounded-xl"
+        />
+        <select
+          name="visibility"
+          onChange={handleChange}
+          className="w-full border p-4 rounded-xl"
+        >
+          <option value="public">Public</option>
+
+          <option value="private">Private</option>
+        </select>
+        <select
+          name="accessLevel"
+          onChange={handleChange}
+          className="w-full border p-4 rounded-xl"
+        >
+          <option value="free">Free</option>
+
+          <option value="premium">Premium</option>
+        </select>
 
         <textarea
           required

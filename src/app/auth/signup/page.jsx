@@ -9,7 +9,9 @@ import {
   Label,
   InputGroup,
   Input,
+  Select,
   FieldError,
+  ListBox,
 } from "@heroui/react";
 import { Eye, EyeSlash, Person, At, ShieldKeyhole } from "@gravity-ui/icons";
 import { signUp } from "@/lib/auth-client";
@@ -46,7 +48,24 @@ export default function SignupPage() {
       if (authError) {
         setError(authError.message || "Something went wrong during signup.");
       } else {
+        // Save user to users collection
+        await fetch("/api/users", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            image: "",
+            role: "user",
+            isPremium: false,
+            createdAt: new Date(),
+          }),
+        });
+
         setSuccess("Account created successfully! Welcome.");
+
         setName("");
         setEmail("");
         setPassword("");

@@ -1,24 +1,38 @@
-const LessonDetailsPage = () => {
-  return (
-    <div className="max-w-5xl mx-auto py-20 px-5">
-      <img
-        className="w-full h-[500px] object-cover rounded-3xl"
-        src="https://images.unsplash.com/photo-1499750310107-5fef28a66643"
-      />
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { getCollections } from "@/lib/collections";
+import { ObjectId } from "mongodb";
 
-      <h1 className="text-5xl font-bold my-10">Lesson Title</h1>
+import LessonDetails from "@/components/lesson/LessonDetails";
 
-      <p>Full lesson description here...</p>
+export default async function LessonPage({ params }) {
+  const { users, lessons } = await getCollections();
 
-      <div className="flex gap-5 mt-10">
-        <button>❤️ Like</button>
+  // Logged in user
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-        <button>🔖 Favorite</button>
+  let dbUser = null;
 
-        <button>🚩 Report</button>
+  if (session?.user?.email) {
+    dbUser = await users.findOne({
+      email: session.user.email,
+    });
+  }
+
+  // Lesson
+  const lesson = await lessons.findOne({
+    _id: new ObjectId(params.id),
+  });
+
+  if (!lesson) {
+    return (
+      <div className="text-center py-20">
+        <h1 className="text-4xl font-bold">Lesson Not Found</h1>
       </div>
-    </div>
-  );
-};
+    );
+  }
 
-export default LessonDetailsPage;
+  return <LessonDetails lesson={lesson} user={dbUser} />;
+}

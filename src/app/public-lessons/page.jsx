@@ -1,6 +1,6 @@
 async function getLessons() {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/lessons`,
+    `${process.env.NEXT_PUBLIC_BETTER_AUTH_URL}/api/lessons`,
     {
       cache: "no-store",
     },

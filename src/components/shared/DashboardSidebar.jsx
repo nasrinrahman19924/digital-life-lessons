@@ -3,11 +3,29 @@
 import Link from "next/link";
 
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+
+import { useSession } from "@/lib/auth-client";
 
 import { Home, Plus, BookOpen, Heart, User, CreditCard } from "lucide-react";
 
 export default function DashboardSidebar() {
   const pathname = usePathname();
+  const { data } = useSession();
+
+  const user = data?.user;
+
+  const [dbUser, setDbUser] = useState(null);
+
+  useEffect(() => {
+    if (user?.email) {
+      fetch(`/api/users?email=${user.email}`)
+        .then((res) => res.json())
+        .then((data) => setDbUser(data));
+    }
+  }, [user]);
+
+  const role = dbUser?.role || "user";
 
   const menus = [
     {
@@ -73,21 +91,7 @@ export default function DashboardSidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`
-
-flex items-center
-
-gap-3
-
-p-4
-
-rounded-xl
-
-transition
-
-${active ? "bg-violet-600" : "hover:bg-slate-800"}
-
-`}
+              className={`flex items-center gap-3 p-4 rounded-xl transition ${active ? "bg-violet-600" : "hover:bg-slate-800"}`}
             >
               <Icon size={20} />
 
@@ -96,6 +100,41 @@ ${active ? "bg-violet-600" : "hover:bg-slate-800"}
           );
         })}
       </div>
+      {role === "admin" && (
+        <div className="mt-10 border-t pt-6 space-y-3">
+          <Link href="/dashboard/admin" className="block hover:text-violet-300">
+            Admin Dashboard
+          </Link>
+
+          <Link
+            href="/dashboard/admin/manage-users"
+            className="block hover:text-violet-300"
+          >
+            Manage Users
+          </Link>
+
+          <Link
+            href="/dashboard/admin/manage-lessons"
+            className="block hover:text-violet-300"
+          >
+            Manage Lessons
+          </Link>
+
+          <Link
+            href="/dashboard/admin/reported-lessons"
+            className="block hover:text-violet-300"
+          >
+            Reported Lessons
+          </Link>
+
+          <Link
+            href="/dashboard/admin/profile"
+            className="block hover:text-violet-300"
+          >
+            Admin Profile
+          </Link>
+        </div>
+      )}
     </aside>
   );
 }

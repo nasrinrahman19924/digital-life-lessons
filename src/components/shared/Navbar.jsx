@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-
+import { useEffect, useState } from "react";
 
 import {
   Avatar,
@@ -16,11 +16,30 @@ import { useSession, signOut } from "@/lib/auth-client";
 
 const Navbar = () => {
   const { data, isPending } = useSession();
+  const [dbUser, setDbUser] = useState(null);
+
+  // const role = user?.role || "user";
 
   const user = data?.user;
 
+  useEffect(() => {
+    if (user?.email) {
+      fetch(`/api/users?email=${user.email}`)
+        .then((res) => res.json())
+        .then((data) => setDbUser(data));
+    }
+  }, [user]);
+
+  const role = dbUser?.role || "user";
+
   const handleLogout = async () => {
-    await signOut();
+    await signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          window.location.href = "/";
+        },
+      },
+    });
   };
 
   return (
@@ -55,13 +74,23 @@ const Navbar = () => {
             </>
           )}
 
-          {user && !user?.isPremium && <Link href="/pricing">Pricing</Link>}
+          {role === "admin" && <Link href="/dashboard/admin">Admin</Link>}
 
-          {user?.isPremium && (
-            <div className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full">
-              Premium ⭐
-            </div>
-          )}
+          {/* Premium Section */}
+
+          {user &&
+            (dbUser?.isPremium ? (
+              <span className="px-3 py-1 rounded-full bg-yellow-400 text-black text-sm font-bold">
+                ⭐ Premium
+              </span>
+            ) : (
+              <Link
+                href="/plans"
+                className="text-violet-600 font-semibold hover:text-violet-800"
+              >
+                Upgrade
+              </Link>
+            ))}
         </div>
 
         {/* Right Side */}
@@ -83,7 +112,7 @@ const Navbar = () => {
             <Dropdown className="flex">
               <DropdownTrigger>
                 <Avatar
-                  src={user.image}
+                  src={user.image || ""}
                   name={user.name}
                   className="cursor-pointer border-2 border-violet-500"
                 />
@@ -99,6 +128,19 @@ const Navbar = () => {
                 <DropdownItem key="dashboard">
                   <Link href="/dashboard">Dashboard</Link>
                 </DropdownItem>
+                {dbUser?.isPremium && (
+                  <DropdownItem key="premium">⭐ Premium Member</DropdownItem>
+                )}
+                {!dbUser?.isPremium && (
+                  <DropdownItem key="upgrade">
+                    <Link href="/plans">Upgrade to Premium</Link>
+                  </DropdownItem>
+                )}
+                {role === "admin" && (
+                  <DropdownItem key="admin">
+                    <Link href="/dashboard/admin">Admin Panel</Link>
+                  </DropdownItem>
+                )}
 
                 <DropdownItem
                   key="logout"
