@@ -45,12 +45,10 @@ export async function POST(req) {
       const { users } = await getCollections();
 
       await users.updateOne(
-        {
-          email,
-        },
+        { email },
         {
           $set: {
-            isPremium: true,
+            plan: "premium",
           },
         },
       );

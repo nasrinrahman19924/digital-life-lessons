@@ -111,11 +111,18 @@ const Navbar = () => {
           ) : (
             <Dropdown className="flex">
               <DropdownTrigger>
-                <Avatar
-                  src={user.image || ""}
-                  name={user.name}
-                  className="cursor-pointer border-2 border-violet-500"
-                />
+                {user.image ? (
+                  <Avatar
+                    src={user.image}
+                    name={user.name}
+                    className="cursor-pointer border-2 border-violet-500"
+                  />
+                ) : (
+                  <Avatar
+                    name={user.name}
+                    className="cursor-pointer border-2 border-violet-500"
+                  />
+                )}
               </DropdownTrigger>
 
               <DropdownMenu>

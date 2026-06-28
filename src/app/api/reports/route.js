@@ -6,13 +6,13 @@ export async function GET() {
 
     const db = client.db("digital-life-lessons");
 
-    const users = await db
-      .collection("users")
+    const reports = await db
+      .collection("reports")
       .find({})
       .sort({ createdAt: -1 })
       .toArray();
 
-    return Response.json(users);
+    return Response.json(reports);
   } catch (error) {
     return Response.json(
       {
